@@ -13,7 +13,7 @@ pipeline {
         CLUSTER_NAME = "junglemeet-cluster-dev"
         EXECUTION_ROLE_ARN = "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole"
         AWS_ECS_TASK_DEFINITION_PATH = 'file://taskdef_template.json'
-        MONGO_URI = ${env.MONGO_URI}
+        MONGO_URI = "${env.MONGO_URI}"
     }
     options {
         ansiColor('xterm')
