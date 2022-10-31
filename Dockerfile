@@ -6,7 +6,7 @@ RUN apk add --no-cache nodejs npm
 
 WORKDIR /app
 
-ARG MONGO_ARG
+ARG MONGO_URI
 
 ENV  MONGO_URI = ${MONGO_ARG}
 
