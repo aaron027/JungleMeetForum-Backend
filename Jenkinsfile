@@ -47,7 +47,7 @@ pipeline {
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                         sh '''
-                            docker build --build-arg MONGO_ARG=${MONGO_URI}  -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
+                            docker build --build-arg MONGO_ARG=$MONGO_URI  -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
                     }
                 }
