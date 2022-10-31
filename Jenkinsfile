@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID="026376606405"
         AWS_DEFAULT_REGION="us-east-1" 
-        IMAGE_REPO_NAME="myapp"
+        IMAGE_REPO_NAME="jm_backend"
         IMAGE_TAG= sh(returnStdout: true, script: "git rev-parse --short=5 HEAD").trim()
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         SERVICE_NAME = 'junglemeet-service-dev'
@@ -36,7 +36,7 @@ pipeline {
         stage('Cloning Git') {
             steps {
                 withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/aaron027/my-app.git']]])     
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/aaron027/JungleMeetForum-Backend.git']]])     
                 }
             }
         }
