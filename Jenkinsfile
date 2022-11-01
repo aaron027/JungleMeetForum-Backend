@@ -14,7 +14,9 @@ pipeline {
         EXECUTION_ROLE_ARN = "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole"
         AWS_ECS_TASK_DEFINITION_PATH = 'file://taskdef_template.json'
         MONGO_URI = "${env.MONGO_URI}"
-        MONGO_TMDB_KEY = "${env.TMDB_KEY}"
+        TMDB_KEY = "${env.TMDB_KEY}"
+        JWT_SECRET = "${env.JWT_SECRET}"
+        JWT_EXPIRE_TIME = "${env.JWT_EXPIRE_TIME}"
     }
     options {
         ansiColor('xterm')
@@ -30,6 +32,7 @@ pipeline {
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     }
                 }
+                 
             }
         }
 
@@ -47,7 +50,7 @@ pipeline {
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                         sh '''
-                            docker build --build-arg MONGO_ARG=$MONGO_URI --build-arg MONGO_ARG=$MONGO_TMDB_KEY -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
+                            docker build --build-arg MONGO_URI=$MONGO_URI --build-arg TMDB_KEY=$TMDB_KEY --build-arg JWT_SECRET=$JWT_SECRET --build-arg JWT_EXPIRE_TIME=$JWT_EXPIRE_TIME -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
                     }
                 }
