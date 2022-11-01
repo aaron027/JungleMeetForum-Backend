@@ -8,8 +8,6 @@ WORKDIR /app
 
 ARG MONGO_ARG
 
-ENV  MONGO_ARG = ${MONGO_URI}
-
 COPY package.json /app
 
 RUN npm install 
