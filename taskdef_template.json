@@ -6,8 +6,8 @@
       {
         "image": "026376606405.dkr.ecr.us-east-1.amazonaws.com/jm_backend",
         "name": "junglemeet-container-dev",
-        "cpu": 1024,
-        "memory": 2048,
+        "cpu": 512,
+        "memory": 1024,
         "essential": true,
         "portMappings": [
           {
@@ -18,6 +18,6 @@
       }
     ],
     "requiresCompatibilities": ["FARGATE"],
-    "cpu": "1024",
-    "memory": "2048"
+    "cpu": "512",
+    "memory": "1024"
   }
