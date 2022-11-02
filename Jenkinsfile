@@ -50,7 +50,7 @@ pipeline {
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                         sh '''
-                            docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY}  -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
+                             docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY} --build-arg JWT_SECRET_ARG=${JWT_SECRET} --build-arg JWT_EXPIRE_TIME_ARG=${JWT_EXPIRE_TIME} -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
                     }
                 }
