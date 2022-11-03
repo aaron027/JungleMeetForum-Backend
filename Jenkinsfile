@@ -50,9 +50,8 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonarqube_7.9.6') {
-                   echo 'code is scanning...'
+                   echo 'The code scanning is running...'
                    sh "${scannerHome}/bin/sonar-scanner"
-                   
                 }
             }
         }
