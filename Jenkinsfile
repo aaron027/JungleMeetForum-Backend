@@ -43,6 +43,23 @@ pipeline {
                 }
             }
         }
+        
+        stage("build & SonarQube analysis") {
+          withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
+              withSonarQubeEnv('sonarqube_7.9.6') {
+                 sh 'mvn clean package sonar:sonar'
+              }
+          }
+      }
+
+      stage("Quality Gate"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
+      }
   
     // Building Docker images
         stage('Building image') {
