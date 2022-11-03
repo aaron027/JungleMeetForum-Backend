@@ -44,8 +44,8 @@ pipeline {
             }
         }
         
-        stage("build & SonarQube analysis") {
-          withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
+      stage("build & SonarQube analysis") {
+          node {
               withSonarQubeEnv('sonarqube_7.9.6') {
                  sh 'mvn clean package sonar:sonar'
               }
