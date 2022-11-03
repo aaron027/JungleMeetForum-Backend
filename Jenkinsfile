@@ -50,13 +50,9 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonarqube_7.9.6') {
-                    sh "which sonar-scanner"
+                   echo 'code is scanning...'
                    sh "${scannerHome}/bin/sonar-scanner"
                    
-                }
-                
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
