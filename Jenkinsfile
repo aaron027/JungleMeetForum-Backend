@@ -44,19 +44,20 @@ pipeline {
             }
         }
         
-        stage('SonarQube analysis') {
-            steps{
-                def scannerHome = tool 'Sonarqube_scanner';
+        stage('Sonarqube') {
+            environment {
+                scannerHome = tool 'Sonarqube_scanner'
+            }
+            steps {
                 withSonarQubeEnv('sonarqube_7.9.6') {
-                  sh "${scannerHome}/bin/sonar-scanner \
-                  -Dsonar.projectKey=junglemeet \
-                  -Dsonar.sources=. \
-                  -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f \
-                  -Dsonar.host.url=http://54.206.106.18:9000/"
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
-          }
-  
+        }
+
     // Building Docker images
         stage('Building image') {
             steps{
