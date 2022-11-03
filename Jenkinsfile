@@ -44,15 +44,16 @@ pipeline {
             }
         }
         
-      
-   
         stage('SonarQube analysis') {
-            steps{
-                withSonarQubeEnv('sonarqube_7.9.6') { 
-                    sh "mvn sonar:sonar"
-                }
+            def scannerHome = tool 'sonarqube';
+            withSonarQubeEnv('sonarqube_7.9.6') {
+              sh "${scannerHome}/bin/sonar-scanner \
+              -D sonar.projectKey=junglemeet \
+              -D sonar.sources=. \
+              -D sonar.host.url=http://54.206.106.18:9000/"
+              -D sonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f
             }
-        }
+          }
   
     // Building Docker images
         stage('Building image') {
