@@ -45,13 +45,15 @@ pipeline {
         }
         
         stage('SonarQube analysis') {
-            def scannerHome = tool 'sonarqube';
-            withSonarQubeEnv('sonarqube_7.9.6') {
-              sh "${scannerHome}/bin/sonar-scanner \
-              -Dsonar.projectKey=junglemeet \
-              -Dsonar.sources=. \
-              -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f \
-              -Dsonar.host.url=http://54.206.106.18:9000/"
+            steps{
+                def scannerHome = tool 'Sonarqube_scanner';
+                withSonarQubeEnv('sonarqube_7.9.6') {
+                  sh "${scannerHome}/bin/sonar-scanner \
+                  -Dsonar.projectKey=junglemeet \
+                  -Dsonar.sources=. \
+                  -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f \
+                  -Dsonar.host.url=http://54.206.106.18:9000/"
+                }
             }
           }
   
