@@ -45,19 +45,25 @@ pipeline {
         }
         
       stage("build & SonarQube analysis") {
-        
-              withSonarQubeEnv('sonarqube_7.9.6') {
-                 sh 'mvn clean package sonar:sonar'
-              }
-          
+          steps{
+            withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
+                withSonarQubeEnv('sonarqube_7.9.6') {
+                     sh 'mvn clean package sonar:sonar'
+                  }
+            }
+          }   
       }
 
       stage("Quality Gate"){
+          steps{
+            withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
           timeout(time: 1, unit: 'HOURS') {
               def qg = waitForQualityGate()
               if (qg.status != 'OK') {
                   error "Pipeline aborted due to quality gate failure: ${qg.status}"
               }
+          }
+            }
           }
       }
   
