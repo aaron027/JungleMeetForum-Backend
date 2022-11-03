@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        PATH = "$PATH:/opt/apache-maven-3.8.2/bin"
         AWS_ACCOUNT_ID="026376606405"
         AWS_DEFAULT_REGION="us-east-1" 
         IMAGE_REPO_NAME="jm_backend"
