@@ -50,8 +50,8 @@ pipeline {
               sh "${scannerHome}/bin/sonar-scanner \
               -Dsonar.projectKey=junglemeet \
               -Dsonar.sources=. \
-              -Dsonar.host.url=http://54.206.106.18:9000/
-              -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f"
+              -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f \
+              -Dsonar.host.url=http://54.206.106.18:9000/"
             }
           }
   
