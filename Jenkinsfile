@@ -45,11 +45,11 @@ pipeline {
         }
         
       stage("build & SonarQube analysis") {
-          node {
+        
               withSonarQubeEnv('sonarqube_7.9.6') {
                  sh 'mvn clean package sonar:sonar'
               }
-          }
+          
       }
 
       stage("Quality Gate"){
