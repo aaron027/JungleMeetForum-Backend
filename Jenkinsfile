@@ -75,8 +75,6 @@ pipeline {
         stage('Scanning container'){
             steps{
                 sh "trivy image -f json -o results.json ${REPOSITORY_URI}"
-                recordIssues(tools: [trivy(pattern: 'results.json')])
-            
             }
         
         }
