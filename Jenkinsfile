@@ -29,7 +29,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                     script {
-                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                     }
                 }
                  
@@ -62,7 +62,7 @@ pipeline {
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                         sh '''
-                             sudo docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY} --build-arg JWT_SECRET_ARG=${JWT_SECRET} --build-arg JWT_EXPIRE_TIME_ARG=${JWT_EXPIRE_TIME} -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
+                             docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY} --build-arg JWT_SECRET_ARG=${JWT_SECRET} --build-arg JWT_EXPIRE_TIME_ARG=${JWT_EXPIRE_TIME} -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
                     }
                 }
@@ -74,8 +74,8 @@ pipeline {
             steps{
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
-                        sh "sudo docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
-                        sh "sudo docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                        sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
+                        sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                     }
                 }
             }
