@@ -73,7 +73,7 @@ pipeline {
         stage('Scanning container'){
             steps{
                 sh '''
-                    trivy image ${REPOSITORY_URI}:${IMAGE_TAG}
+                    trivy image ${REPOSITORY_URI}
                 '''
             }
         
