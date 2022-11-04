@@ -73,7 +73,7 @@ pipeline {
         stage('Scanning container'){
             steps{
                 sh '''
-                    trivy --severity MEDIUM,HIGH,CRITICAL  ${REPOSITORY_URI}
+                    trivy image ${REPOSITORY_URI}
                 '''
             }
         
