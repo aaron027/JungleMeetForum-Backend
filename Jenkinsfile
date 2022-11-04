@@ -64,9 +64,7 @@ pipeline {
                         sh '''
                              docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY} --build-arg JWT_SECRET_ARG=${JWT_SECRET} --build-arg JWT_EXPIRE_TIME_ARG=${JWT_EXPIRE_TIME} -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
-//                         sh '''
-//                             trivy image -f table ${REPOSITORY_URI}
-//                         '''
+                        
                     }
                 }
             }
@@ -74,7 +72,9 @@ pipeline {
         
         stage('Scanning container'){
             steps{
-                sh "trivy image -f json -o results.json ${REPOSITORY_URI}"
+                sh '''
+                    trivy --no-progress --exit-code 1 --severity MEDIUM,HIGH,CRITICAL  ${REPOSITORY_URI}
+                '''
             }
         
         }
