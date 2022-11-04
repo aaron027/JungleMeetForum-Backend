@@ -73,7 +73,7 @@ pipeline {
         stage('Scanning container'){
             steps{
                 sh '''
-                    trivy --no-progress --exit-code 1 --severity MEDIUM,HIGH,CRITICAL  ${REPOSITORY_URI}
+                    trivy --severity MEDIUM,HIGH,CRITICAL  ${REPOSITORY_URI}
                 '''
             }
         
