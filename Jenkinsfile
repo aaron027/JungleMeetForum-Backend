@@ -99,6 +99,7 @@ pipeline {
                         def newimageurl = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                         def oldimageurl = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
                         sh "sed -i -e 's#${oldimageurl}#${newimageurl}#' ./manifest.yml"
+                        sh "aws eks update-kubeconfig --region us-east-1 --name junglemeet-cluster"
                         sh "kubectl apply -f manifest.yml"
                     }
                 }
