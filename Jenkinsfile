@@ -44,17 +44,27 @@ pipeline {
             }
         }
         
-        stage('Sonarqube') {
-            environment {
-                scannerHome = tool 'Sonarqube_scanner'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube_7.9.6') {
-                   echo 'The code scanning is running...'
-                   sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
+        // stage('Sonarqube') {
+        //     environment {
+        //         scannerHome = tool 'Sonarqube_scanner'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarqube_7.9.6') {
+        //            // sh "${scannerHome}/bin/sonar-scanner"
+        //            sh '''
+        //            sonar-scanner \
+        //               -Dsonar.projectKey=junglemeet_backend \
+        //               -Dsonar.sources=. \
+        //               -Dsonar.host.url=http://54.206.106.18:9000 \
+        //               -Dsonar.login=c693fbe9fdddeefafc46cb658cf2b28d4702231f
+        //         '''
+        //         }
+                
+        //         timeout(time: 10, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
 
     // Building Docker images
         stage('Building image') {
@@ -64,19 +74,9 @@ pipeline {
                         sh '''
                              docker build --build-arg MONGO_URI_ARG=${MONGO_URI} --build-arg TMDB_KEY_ARG=${TMDB_KEY} --build-arg JWT_SECRET_ARG=${JWT_SECRET} --build-arg JWT_EXPIRE_TIME_ARG=${JWT_EXPIRE_TIME} -t "${IMAGE_REPO_NAME}:${IMAGE_TAG}" .
                         '''   
-                        
                     }
                 }
             }
-        }
-        
-        stage('Scanning container'){
-            steps{
-                sh '''
-                    trivy image ${REPOSITORY_URI}
-                '''
-            }
-        
         }
 
     // Uploading Docker images into AWS ECR
@@ -90,22 +90,16 @@ pipeline {
                 }
             }
          }
-        
-        
-       
 
-        stage('Deploy Image to ECS') {
+        stage('Deploy Image to EKS') {
             steps{
                 // update service
                 script {
                     withAWS(credentials: 'AWS_Credentials', region: 'us-east-1') {
                         def newimageurl = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                         def oldimageurl = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-                        sh "sed -i -e 's#${oldimageurl}#${newimageurl}#' ./taskdef_template.json"
-                        sh "aws ecs register-task-definition --family ${TASK_FAMILY} --cli-input-json file://${WORKSPACE}/taskdef_template.json --region ${AWS_DEFAULT_REGION}"
-                        sh "aws ecs describe-task-definition --task-definition ${TASK_FAMILY} --region ${AWS_DEFAULT_REGION} | jq .taskDefinition.revision > output.txt"
-                        def REVISION = readFile "${WORKSPACE}/output.txt"
-                        sh "aws ecs update-service --cluster ${CLUSTER_NAME} --region ${AWS_DEFAULT_REGION} --service ${SERVICE_NAME} --task-definition ${TASK_FAMILY}:$REVISION"
+                        sh "sed -i -e 's#${oldimageurl}#${newimageurl}#' ./manifest.yml"
+                        sh "kubectl apply manifest.yml"
                     }
                 }
             }
